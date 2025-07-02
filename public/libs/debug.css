@@ -74,3 +74,18 @@ html, body{
 section {
 	float: left;
 }
+
+.module-link {
+  cursor: pointer;
+  padding: 2px 6px;
+}
+
+.module-link:hover {
+  background-color: #e0e0e0;
+}
+
+.module-link.selected {
+  background-color: #cfe2ff;
+  font-weight: bold;
+}
+
