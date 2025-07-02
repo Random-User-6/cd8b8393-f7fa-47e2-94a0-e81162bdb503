@@ -68,4 +68,20 @@ $(document).ready(function () {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
   });
+
+    // Paste & Render button logic
+  $("#renderBtn").on("click", function () {
+    const input = $("#jsonInput").val();
+    try {
+      const parsed = JSON.parse(input);
+      $("#json-viewer").jsonViewer(parsed, {
+        collapsed: false,
+        rootCollapsable: false
+      });
+      $("#error_message").text("");
+    } catch (e) {
+      $("#error_message").text("Invalid JSON: " + e.message);
+    }
+  });
+
 });
