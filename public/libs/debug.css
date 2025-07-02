@@ -87,5 +87,6 @@ section {
 .module-link.selected {
   background-color: #cfe2ff;
   font-weight: bold;
+  font-size: 1.2em;
 }
 
