@@ -1,3 +1,5 @@
+let parsedArray = [];
+
 $(function () {
   $("#accordion").accordion({
     heightStyle: "content",
@@ -7,37 +9,35 @@ $(function () {
   $("#renderBtn").on("click", function () {
     const raw = $("#jsonInput").val();
     try {
-      const data = JSON.parse(raw);
+      parsedArray = JSON.parse(raw);
+      if (!Array.isArray(parsedArray)) throw new Error("Input JSON must be an array.");
 
-      // Fill Script Info
-      $("#campaign_cell").text(data?.scriptInfo?.campaign || "--");
-      $("#script_name_cell").text(data?.scriptInfo?.scriptName || "--");
-      $("#media_type_cell").text(data?.scriptInfo?.mediaType || "--");
-
-      // Fill Initial Params
-      const $init = $("#init_params_table tbody").empty();
-      if (data.initialParams) {
-        Object.entries(data.initialParams).forEach(([k, v]) => {
-          $init.append(`<tr><td>${k}</td><td>${v}</td></tr>`);
-        });
-      }
-
-      // Fill Modules
       const $mods = $("#modules_list").empty();
-      (data.modules || []).forEach(m => {
-        $mods.append(`<li>${m}</li>`);
+
+      parsedArray.forEach((item, index) => {
+        const modName = item?.executorState?.moduleName || `Step ${index}`;
+        const safeId = `mod_${index}`;
+        $mods.append(`<li class="module-link" data-index="${index}" id="${safeId}">${modName}</li>`);
       });
 
-      // Render JSON state content
-      $("#json-viewer").jsonViewer(data.stateContent || {}, {
-        collapsed: false,
-        rootCollapsable: false
+      $(".module-link").on("click", function () {
+        const idx = $(this).data("index");
+        const state = parsedArray[idx] || {};
+        $("#json-viewer").jsonViewer(state, {
+          collapsed: false,
+          rootCollapsable: false
+        });
+        $(".module-link").removeClass("selected");
+        $(this).addClass("selected");
       });
 
+      // Auto-select first
+      $(".module-link").first().trigger("click");
       $("#error_message").text("");
-
-    } catch (e) {
-      $("#error_message").text("Invalid JSON: " + e.message);
+    } catch (err) {
+      $("#error_message").text("Invalid JSON: " + err.message);
+      $("#json-viewer").empty();
+      $("#modules_list").empty();
     }
   });
 
