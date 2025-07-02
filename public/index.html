@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+  <meta charset="utf-8" />
+  <title>Custom IVR Debugger</title>
+  <link rel="stylesheet" href="libs/jquery.json-viewer.css">
+  <script src="libs/jquery-1.12.4.min.js"></script>
+  <script src="libs/jquery.json-viewer.js"></script>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    #json-viewer { border: 1px solid #ccc; padding: 10px; margin-top: 20px; }
+  </style>
+</head>
+<body>
+
+<h2>Paste JSON:</h2>
+<textarea id="jsonInput" rows="10" cols="100"></textarea><br/>
+<button id="renderBtn">Render</button>
+
+<h2>State Content:</h2>
+<article id="json-viewer"></article>
+
+<script src="your_script.js"></script>
+</body>
+</html>
