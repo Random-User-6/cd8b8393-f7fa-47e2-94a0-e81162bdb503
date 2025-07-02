@@ -1,0 +1,76 @@
+html, body{
+  height:95%;
+  width: 100%;
+}
+
+.header h1, h3 {
+ 	text-align: center;
+ 	vertical-align:top;
+  	margin: 0; 
+}
+
+#navigate_section { 
+
+	max-width: 48%;
+	min-width: 15%;
+	min-height: 95%;
+	max-height: 95%;
+	/*background-color:  #11f1eeff; */
+}
+
+#navigate_section h3 {
+ 	text-align: center;
+  	margin: 0; 
+}
+
+
+#script_info {
+
+	font-size: 0.8em;
+}
+
+.error_container {
+
+	color: red;
+}
+
+
+
+#tree_section{
+	width: 48%;
+	/*background-color:  #22f22eff;*/
+}
+
+
+
+#json-viewer {
+	/*background-color:  #1194eeff;*/
+	width: auto;
+	margin: 1em;
+}
+
+
+.state_list{
+	list-style-type:none;
+	padding-left: 0;
+	padding-right: 0;
+	margin: 0;
+}
+
+.state_list_item {
+	padding-left: 2em;
+}
+
+.state_list li:nth-child(even) {background: #EEE}
+
+.state_list li:nth-child(odd) {background: #FFF}
+
+.state_list_item.active{
+	font-weight: bold;
+	font-size: 1.2em;
+	background-color: yellow
+}
+
+section {
+	float: left;
+}
