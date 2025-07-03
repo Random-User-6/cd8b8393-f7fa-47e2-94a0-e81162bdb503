@@ -1,83 +1,62 @@
-let parsedArray = [];
-let currentIndex = 0;
+let jsonData = [];
+let selectedIndex = -1;
 
-$(function () {
-  $("#accordion").accordion({
-    heightStyle: "content",
-    collapsible: true
-  });
+function renderModulesList() {
+  const list = document.querySelector(".state_list");
+  list.innerHTML = "";
 
-  $("#renderBtn").on("click", function () {
-    const raw = $("#jsonInput").val();
-    try {
-      parsedArray = JSON.parse(raw);
-      if (!Array.isArray(parsedArray)) throw new Error("Input JSON must be an array.");
-
-      const $mods = $("#modules_list").empty();
-
-      parsedArray.forEach((item, index) => {
-        const modName = item?.executorState?.moduleName || `Step ${index}`;
-        $mods.append(`<li class="module-link" data-index="${index}">${modName}</li>`);
-      });
-
-      $(".module-link").on("click", function () {
-        const index = $(this).data("index");
-        currentIndex = index;
-        renderVariables(index);
-        $(".module-link").removeClass("selected");
-        $(this).addClass("selected");
-      });
-
-      // Trigger the first row
-      $(".module-link").first().trigger("click");
-
-      $("#error_message").text("");
-    } catch (err) {
-      $("#error_message").text("Invalid JSON: " + err.message);
-      $("#json-viewer").empty();
-      $("#modules_list").empty();
-    }
-  });
-
-  $("#difference").on("change", function () {
-    renderVariables(currentIndex);
-  });
-
-  $("#save_btn").on("click", function () {
-    const blob = new Blob([$("#jsonInput").val()], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "ivr_debug.json";
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-  });
-});
-
-// 🔧 Main renderer with diff support
-function renderVariables(index) {
-  const current = parsedArray[index]?.variables || {};
-  const prev = index > 0 ? parsedArray[index - 1]?.variables || {} : {};
-
-  const showAll = !$("#difference").is(":checked");
-
-  let result;
-
-  if (showAll || index === 0) {
-    result = current;
-  } else {
-    result = {};
-    Object.entries(current).forEach(([key, value]) => {
-      if (prev[key] !== value) {
-        result[key] = value;
-      }
-    });
-  }
-
-  $("#json-viewer").jsonViewer(result, {
-    collapsed: false,
-    rootCollapsable: false
+  jsonData.forEach((entry, index) => {
+    const li = document.createElement("li");
+    li.textContent = entry.executorState?.moduleName || `Step ${index}`;
+    li.className = "module-entry";
+    li.onclick = () => {
+      selectedIndex = index;
+      renderStateContent(index);
+    };
+    list.appendChild(li);
   });
 }
+
+function getDifferences(current, previous) {
+  const diff = {};
+  for (const key in current) {
+    if (current[key] !== previous?.[key]) {
+      diff[key] = current[key];
+    }
+  }
+  return diff;
+}
+
+function renderStateContent(index) {
+  const viewer = document.getElementById("json-viewer");
+  viewer.innerHTML = "";
+
+  const showDiffOnly = document.getElementById("difference").checked;
+  const current = jsonData[index];
+  const previous = jsonData[index - 1];
+
+  const displayData = {
+    variables: showDiffOnly ? getDifferences(current.variables, previous?.variables) : current.variables,
+    executorState: current.executorState
+  };
+
+  $("#json-viewer").jsonViewer(displayData, { collapsed: false });
+}
+
+document.getElementById("difference").addEventListener("change", () => {
+  if (selectedIndex !== -1) {
+    renderStateContent(selectedIndex);
+  }
+});
+
+document.getElementById("render_btn").addEventListener("click", () => {
+  try {
+    const input = document.getElementById("json_input").value;
+    jsonData = JSON.parse(input);
+    selectedIndex = -1;
+    renderModulesList();
+    document.getElementById("json-viewer").innerHTML = "<p>Select a module to see details</p>";
+  } catch (e) {
+    alert("Invalid JSON: " + e.message);
+  }
+});
