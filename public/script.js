@@ -1,3 +1,5 @@
+// script.js
+
 let jsonData = [];
 let selectedIndex = -1;
 
@@ -9,7 +11,10 @@ function renderModulesList() {
     const li = document.createElement("li");
     li.textContent = entry.executorState?.moduleName || `Step ${index}`;
     li.className = "module-entry";
+    li.dataset.index = index;
     li.onclick = () => {
+      document.querySelectorAll(".state_list li").forEach(el => el.classList.remove("selected"));
+      li.classList.add("selected");
       selectedIndex = index;
       renderStateContent(index);
     };
@@ -19,8 +24,9 @@ function renderModulesList() {
 
 function getDifferences(current, previous) {
   const diff = {};
+  if (!previous) return current;
   for (const key in current) {
-    if (current[key] !== previous?.[key]) {
+    if (JSON.stringify(current[key]) !== JSON.stringify(previous[key])) {
       diff[key] = current[key];
     }
   }
@@ -40,7 +46,11 @@ function renderStateContent(index) {
     executorState: current.executorState
   };
 
-  $("#json-viewer").jsonViewer(displayData, { collapsed: false });
+  if (typeof $("#json-viewer").jsonViewer === "function") {
+    $("#json-viewer").jsonViewer(displayData, { collapsed: false });
+  } else {
+    viewer.textContent = JSON.stringify(displayData, null, 2);
+  }
 }
 
 document.getElementById("difference").addEventListener("change", () => {
