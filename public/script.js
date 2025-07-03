@@ -68,5 +68,15 @@ document.getElementById("render_btn").addEventListener("click", () => {
     document.getElementById("json-viewer").innerHTML = "<p>Select a module to see details</p>";
   } catch (e) {
     alert("Invalid JSON: " + e.message);
+    jsonData = [];
   }
+});
+
+// Re-enable accordion functionality
+$(function () {
+  $("#accordion").accordion({
+    heightStyle: "content",
+    collapsible: true,
+    active: false
+  });
 });
