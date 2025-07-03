@@ -78,3 +78,9 @@ document.getElementById("renderBtn").addEventListener("click", () => {
     alert("Invalid JSON: " + e.message);
   }
 });
+
+$(function () {
+  $("#accordion").accordion({
+    heightStyle: "content" // Let panels size based on their content
+  });
+});
