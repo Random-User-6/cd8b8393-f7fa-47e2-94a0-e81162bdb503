@@ -1,18 +1,19 @@
+common.js
 
-var funfneunCommon = {};
+var Five9Common = {};
 
 /**
  * Prints debug messages to console if available
  */
-funfneunCommon.debug = function() {
+Five9Common.debug = function() {
     if (typeof window.console != 'undefined') {
         if(window.console.log.apply) {
             window.console.log.apply(window.console, arguments);
         } else {
-            if(!funfneunCommon.log) {
-                funfneunCommon.log = Function.prototype.bind.call(console.log, console);
+            if(!Five9Common.log) {
+                Five9Common.log = Function.prototype.bind.call(console.log, console);
             }
-            funfneunCommon.log.apply(window.console, arguments);
+            Five9Common.log.apply(window.console, arguments);
         }
     }
 };
@@ -25,7 +26,7 @@ funfneunCommon.debug = function() {
  * @param restrictions
  * @returns {*}
  */
-funfneunCommon.validateInput = function(val, restrictions) {
+Five9Common.validateInput = function(val, restrictions) {
     var response = {};
     val = val.trim();
     if (typeof restrictions == 'undefined') {
@@ -50,9 +51,9 @@ funfneunCommon.validateInput = function(val, restrictions) {
             var selected_ccexp_date = (year - ref_year) * 12 + month - ref_month;
 
             if (selected_ccexp_date > max_allowed) {
-                response.error = funfneunCommon.getString("funfneun-ln-str-input-exp-date-format");
+                response.error = Five9Common.getString("five9-ln-str-input-exp-date-format");
             } else if (selected_ccexp_date < 0) {
-                response.error = funfneunCommon.getString("funfneun-ln-str-input-exp-date-in-past");
+                response.error = Five9Common.getString("five9-ln-str-input-exp-date-in-past");
             } else {
                 response.valFormatted = val;
             }
@@ -62,7 +63,7 @@ funfneunCommon.validateInput = function(val, restrictions) {
 
             var matchArray = val.match(timePat);
             if (matchArray == null) {
-                response.error = funfneunCommon.getString("funfneun-ln-str-input-time-format");
+                response.error = Five9Common.getString("five9-ln-str-input-time-format");
                 break;
             }
             var hour = parseInt(matchArray[1]);
@@ -73,16 +74,16 @@ funfneunCommon.validateInput = function(val, restrictions) {
             if (ampm == "") { ampm = null }
 
             if (hour < 0  || hour > 23) {
-                response.error = funfneunCommon.getString("funfneun-ln-str-input-hours-format");
+                response.error = Five9Common.getString("five9-ln-str-input-hours-format");
                 break;
             }
             if (minute < 0 || minute > 59) {
-                response.error = funfneunCommon.getString("funfneun-ln-str-input-minutes-format");
+                response.error = Five9Common.getString("five9-ln-str-input-minutes-format");
                 break;
             }
             var t = hour * 100 + minute;
             if (t < parseInt(restrObj.range.minvalue) || t > parseInt(restrObj.range.maxvalue)) {
-                response.error = funfneunCommon.getString("funfneun-ln-str-input-time-range-format",
+                response.error = Five9Common.getString("five9-ln-str-input-time-range-format",
                     restrObj.range.minvalue, restrObj.range.maxvalue);
                 break;
             }
@@ -90,7 +91,7 @@ funfneunCommon.validateInput = function(val, restrictions) {
             response.valFormatted = (hour<10? "0":"") + hour + (minute<10? ":0": ":") + minute;
             break;
         case "phone":
-        	if(restrObj["is_e164"] && restrObj["is_e164"] === "true"){
+            if(restrObj["is_e164"] && restrObj["is_e164"] === "true"){
                 var phonePat = new RegExp("^\\+" + restrObj["country_code"] + "\\d{7,14}$");
                 var intPhonePat = /^\+\d{10,15}$/;
             } else {
@@ -98,14 +99,14 @@ funfneunCommon.validateInput = function(val, restrictions) {
                 var intPhonePat = /^011\d{7}\d*$/;
             }
 
-        	if(phonePat.test(val) || restrObj["allow_international"] == "true" && intPhonePat.test(val)){
-        		response.valFormatted = val.replace(/\D/g,'');
-        	} else {
-        		response.error = funfneunCommon.getString("funfneun-ln-str-input-phone-format");
-        	}
+            if(phonePat.test(val) || restrObj["allow_international"] == "true" && intPhonePat.test(val)){
+                response.valFormatted = val.replace(/\D/g,'');
+            } else {
+                response.error = Five9Common.getString("five9-ln-str-input-phone-format");
+            }
             break;
         case "phoneInputGrammar":
-        	if (restrObj["is_e164"] && restrObj["is_e164"] === "true") {
+            if (restrObj["is_e164"] && restrObj["is_e164"] === "true") {
 
                 var patternE164 = /^\+\d{10,15}$/;
                 if (patternE164.test(val)) {
@@ -146,54 +147,54 @@ funfneunCommon.validateInput = function(val, restrictions) {
                         break;
                     }
                 }
-        	} else {
+            } else {
                 var pattern = /^(\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4}))$|^(011\d{7}\d*)$/;
                 if (pattern.test(val)) {
                     response.valFormatted = val.replace(/\D/g,'');
                     break;
                 }
-        	}
+            }
             
-        	response.error = funfneunCommon.getString("funfneun-ln-str-input-phone-format");
-        	break;
+            response.error = Five9Common.getString("five9-ln-str-input-phone-format");
+            break;
         case "zipCode":
             if (/(^\d{5}$)|(^\d{5}-\d{4}$)/.test(val)) {
                 response.valFormatted = val;
             } else {
-                response.error = funfneunCommon.getString("funfneun-ln-str-input-zip-format");
+                response.error = Five9Common.getString("five9-ln-str-input-zip-format");
             }
             break;
         case "socialsecurity":
             if (/^\d{3}-?\d{2}-?\d{4}$/.test(val)) {
                 response.valFormatted = val;
             } else {
-                response.error = funfneunCommon.getString("funfneun-ln-str-input-social-format");
+                response.error = Five9Common.getString("five9-ln-str-input-social-format");
             }
             break;
         case "currency":
             if (/^\$?((\d{1,3},(\d{3},)*\d{3})|\d+)(\.\d{2})?$/.test(val)) {
                 var d = parseFloat(val.replace(/[,\$\s]/g, ''));
                 if (d < parseFloat(restrObj.range.minvalue) || d > parseFloat(restrObj.range.maxvalue)) {
-                    response.error = funfneunCommon.getString("funfneun-ln-str-input-time-range-format",
+                    response.error = Five9Common.getString("five9-ln-str-input-time-range-format",
                         restrObj.range.minvalue,
                         restrObj.range.maxvalue);
                 } else {
                     response.valFormatted = d;
                 }
             } else {
-                response.error = funfneunCommon.getString("funfneun-ln-str-input-currency-format");
+                response.error = Five9Common.getString("five9-ln-str-input-currency-format");
             }
             break;
         case "creditcard":
             if (/^(?:\d[ -]?){12,18}\d$/.test(val)) {
                 response.valFormatted = val.replace(/[-\s]/g, '');
             } else {
-                response.error = funfneunCommon.getString("funfneun-ln-str-input-card-format");
+                response.error = Five9Common.getString("five9-ln-str-input-card-format");
             }
             break;
         case "digits":   // it is just a string!
             if (val.length < restrObj.range.minlength || val.length > restrObj.range.maxlength) {
-                response.error = funfneunCommon.getString("funfneun-ln-str-input-digit-range-format",
+                response.error = Five9Common.getString("five9-ln-str-input-digit-range-format",
                     restrObj.range.minlength,
                     restrObj.range.maxlength);
             } else {
@@ -202,11 +203,11 @@ funfneunCommon.validateInput = function(val, restrictions) {
             break;
         case "integer":
             if (val.length < restrObj.range.minlength || val.length > restrObj.range.maxlength) {
-                response.error = funfneunCommon.getString("funfneun-ln-str-input-digit-range-format",
+                response.error = Five9Common.getString("five9-ln-str-input-digit-range-format",
                     restrObj.range.minlength,
                     restrObj.range.maxlength);
             } else if (/^[-+]?\d+$/.test(val)!=true) {
-                response.error = funfneunCommon.getString("funfneun-ln-str-input-numeric-format");
+                response.error = Five9Common.getString("five9-ln-str-input-numeric-format");
                 break;
             } else {
                 response.valFormatted = val;
@@ -223,7 +224,7 @@ funfneunCommon.validateInput = function(val, restrictions) {
                 datePat = /^(\d{4})-(\d{1,2})-(\d{1,2})$/;
                 matchArray = val.match(datePat);
                 if (matchArray == null) {         
-                    response.error = funfneunCommon.getString("funfneun-ln-str-input-date-format");
+                    response.error = Five9Common.getString("five9-ln-str-input-date-format");
                     break;
                 }
                 month = parseInt(matchArray[2]);
@@ -236,27 +237,27 @@ funfneunCommon.validateInput = function(val, restrictions) {
             }
 
             if (month < 1 || month > 12) {
-                response.error = funfneunCommon.getString("funfneun-ln-str-input-months-format");
+                response.error = Five9Common.getString("five9-ln-str-input-months-format");
                 break;
             }
             if (day < 1 || day > 31) {
-                response.error = funfneunCommon.getString("funfneun-ln-str-input-days-format");
+                response.error = Five9Common.getString("five9-ln-str-input-days-format");
                 break;
             }
             if ((month==4 || month==6 || month==9 || month==11) && day==31) {
-                response.error = funfneunCommon.getString("funfneun-ln-str-input-month-format", month);
+                response.error = Five9Common.getString("five9-ln-str-input-month-format", month);
                 break;
             }
             if (month == 2) {
                 var isleap = (year % 4 == 0 && (year % 100 != 0 || year % 400 == 0));
                 if (day > 29 || (day==29 && !isleap)) {
-                    response.error = funfneunCommon.getString("funfneun-ln-str-input-february-format", year, day);
+                    response.error = Five9Common.getString("five9-ln-str-input-february-format", year, day);
                     break;
                 }
             }
             var d = year*10000 + month*100 + day;
             if (d < parseInt(restrObj.range.minvalue) || d > parseInt(restrObj.range.maxvalue)) {
-                response.error = funfneunCommon.getString("funfneun-ln-str-input-exp-date-between",
+                response.error = Five9Common.getString("five9-ln-str-input-exp-date-between",
                     restrObj.range.minvalue.substr(4,2), restrObj.range.minvalue.substr(6), restrObj.range.minvalue.substr(0,4), 
                     restrObj.range.maxvalue.substr(4,2), restrObj.range.maxvalue.substr(6), restrObj.range.maxvalue.substr(0,4)); 
                 break;
@@ -267,19 +268,19 @@ funfneunCommon.validateInput = function(val, restrictions) {
         case "number":
             var deciPat = /^[-+]?\d+(\.\d+)?$/;
             if(deciPat.test(val)!=true){
-                response.error = funfneunCommon.getString("funfneun-ln-str-input-numeric-format");
+                response.error = Five9Common.getString("five9-ln-str-input-numeric-format");
                 break;
             }
 
             var numericPat = /^[-+]?\d+(\.\d{1,5})?$/;
             if(numericPat.test(val)!=true){
-                response.error = funfneunCommon.getString("funfneun-ln-str-input-max-fraction");
+                response.error = Five9Common.getString("five9-ln-str-input-max-fraction");
                 break;
             }
 
             var d = parseFloat(val);
             if (d < parseFloat(restrObj.range.minvalue) || d > parseFloat(restrObj.range.maxvalue)) {
-                response.error = funfneunCommon.getString("funfneun-ln-str-input-time-range-format",
+                response.error = Five9Common.getString("five9-ln-str-input-time-range-format",
                     restrObj.range.minvalue,
                     restrObj.range.maxvalue);
             } else {
@@ -290,26 +291,26 @@ funfneunCommon.validateInput = function(val, restrictions) {
             if (/^((\d{1,3},(\d{3},)*\d{3})|\d+)$/.test(val)) {
                 var d = parseFloat(val.replace(/[,\$\s]/g, ''));
                 if (d < parseFloat(restrObj.range.minvalue) || d > parseFloat(restrObj.range.maxvalue)) {
-                    response.error = funfneunCommon.getString("funfneun-ln-str-input-time-range-format",
+                    response.error = Five9Common.getString("five9-ln-str-input-time-range-format",
                         restrObj.range.minvalue,
                         restrObj.range.maxvalue);
                 } else {
                     response.valFormatted = d;
                 }
             } else {
-                response.error = funfneunCommon.getString("funfneun-ln-str-input-currency-format");
+                response.error = Five9Common.getString("five9-ln-str-input-currency-format");
             }
             break;
         case "alphanum":
-        	var pureValue = val.replace(/_/gi,'');
-        	pureValue = pureValue.replace(/-/gi,'');
-        	pureValue = pureValue.replace(/ /gi,'');
-        	if (!/^\w+$/.test(pureValue) || pureValue.length > 20) {
-        		response.error = funfneunCommon.getString("funfneun-ln-str-input-incorrect-value");
-        	} else {
-        		response.valFormatted = pureValue;
-        	}
-        	break;
+            var pureValue = val.replace(/_/gi,'');
+            pureValue = pureValue.replace(/-/gi,'');
+            pureValue = pureValue.replace(/ /gi,'');
+            if (!/^\w+$/.test(pureValue) || pureValue.length > 20) {
+                response.error = Five9Common.getString("five9-ln-str-input-incorrect-value");
+            } else {
+                response.valFormatted = pureValue;
+            }
+            break;
         default:
             response.valFormatted = val;
             break;
@@ -324,9 +325,9 @@ funfneunCommon.validateInput = function(val, restrictions) {
  * @param data
  * @param callback
  */
-funfneunCommon.callAPI = function(url, method, data, callback)
+Five9Common.callAPI = function(url, method, data, callback)
 {
-    funfneunCommon._sendAPIRequest(url, method, null, null, data, callback);
+    Five9Common._sendAPIRequest(url, method, null, null, data, callback);
 };
 
 /**
@@ -338,9 +339,9 @@ funfneunCommon.callAPI = function(url, method, data, callback)
  * @param data
  * @param callback
  */
-funfneunCommon.callAPIWithCondition = function(url, method, etag, data, callback)
+Five9Common.callAPIWithCondition = function(url, method, etag, data, callback)
 {
-    funfneunCommon._sendAPIRequest(url, method, null, etag, data, callback);
+    Five9Common._sendAPIRequest(url, method, null, etag, data, callback);
 };
 
 /**
@@ -353,7 +354,7 @@ funfneunCommon.callAPIWithCondition = function(url, method, etag, data, callback
  * @param etag to be used in precondition header
  * @param callback to be called when operation is finished
  */
-funfneunCommon._sendAPIRequest = function(url, method, headers, etag, data, callback) {
+Five9Common._sendAPIRequest = function(url, method, headers, etag, data, callback) {
 
     var request = {
         type: method,
@@ -371,7 +372,7 @@ funfneunCommon._sendAPIRequest = function(url, method, headers, etag, data, call
     }
 
     request.success = function(response, result, xhr) {
-        var api_response = funfneunCommon._parseAPIResponse(response, result);
+        var api_response = Five9Common._parseAPIResponse(response, result);
         if (typeof callback != 'undefined') {
             callback(api_response.error, api_response.data, xhr);
         }
@@ -387,7 +388,7 @@ funfneunCommon._sendAPIRequest = function(url, method, headers, etag, data, call
 };
 
 
-funfneunCommon._sendSyncAPIRequest = function(path, method){
+Five9Common._sendSyncAPIRequest = function(path, method){
     var result = $.ajax({
         url: path,
         type: method,
@@ -399,7 +400,7 @@ funfneunCommon._sendSyncAPIRequest = function(path, method){
     return result.responseText;
 };
 
-funfneunCommon._parseAPIResponse = function(response, result)
+Five9Common._parseAPIResponse = function(response, result)
 {
     var api_response = {
             error: null,
@@ -429,7 +430,7 @@ funfneunCommon._parseAPIResponse = function(response, result)
     return api_response;
 };
 
-funfneunCommon._parseError = function(response) {
+Five9Common._parseError = function(response) {
     if ((response) && (typeof response.responseText != 'undefined' )) {
         var response = JSON.parse(response.responseText);
         return response.error;
@@ -439,18 +440,18 @@ funfneunCommon._parseError = function(response) {
 };
 
 
-funfneunCommon.View = function(app, pageId) {
+Five9Common.View = function(app, pageId) {
 
     this.pageId = pageId;
     this.app = app;
     this.page = $(pageId);
     this.viewShownCallbacks = $.Callbacks();
-    this.prototype = funfneunCommon.View.prototype;
+    this.prototype = Five9Common.View.prototype;
 
     return this;
 };
 
-funfneunCommon.getString = function() {
+Five9Common.getString = function() {
     var parameters = Array.prototype.slice.call(arguments, 0);
     var id = parameters[0];
     var args = parameters.slice(1);
@@ -463,7 +464,7 @@ funfneunCommon.getString = function() {
     if(str){
         str = str.substr(1, (str.length-2));
     } else {
-        funfneunCommon.debug("Unknown string id:" + id );
+        Five9Common.debug("Unknown string id:" + id );
         return "";
     }
 
@@ -477,10 +478,10 @@ funfneunCommon.getString = function() {
 
 }
 
-funfneunCommon.View.prototype = {
+Five9Common.View.prototype = {
 
     show: function() {
-        funfneunCommon.debug("going to change page: ", this.page, this);
+        Five9Common.debug("going to change page: ", this.page, this);
 
         var currentView = this.app.getActivePage();
         if (currentView.hasOwnProperty("destroy")) {
@@ -505,7 +506,7 @@ funfneunCommon.View.prototype = {
                 var eventHandlerName = this.events[eventSelector];
 
                 var parsedSelector = eventSelector.split(' ');
-                funfneunCommon.debug("binding event: ", parsedSelector[0], parsedSelector[1], eventHandlerName, view.getActivePage().find(parsedSelector[0]).length);
+                Five9Common.debug("binding event: ", parsedSelector[0], parsedSelector[1], eventHandlerName, view.getActivePage().find(parsedSelector[0]).length);
                 view.getActivePage().find(parsedSelector[0]).bind(parsedSelector[1],wrapEventHandler(view, eventHandlerName));
             }
         }
@@ -527,9 +528,9 @@ funfneunCommon.View.prototype = {
                 .css({
                     top: pos.top + fieldObj.height()  + 1,
                     left: pos.left,
-                    width: funfneunIvr._errmsg_width,
+                    width: Five9Ivr._errmsg_width,
                     position: 'absolute',
-                    'background-color': funfneunIvr._errmsg_bg_color
+                    'background-color': Five9Ivr._errmsg_bg_color
                 }).insertAfter(fieldObj).attr('id', 'err' + fieldObj.attr("id"));
             setTimeout(function() {
                 $('#err' + fieldObj.attr("id")).fadeOut().empty();
@@ -539,18 +540,18 @@ funfneunCommon.View.prototype = {
 
 };
 
-funfneunCommon.MobileApp = function() {
+Five9Common.MobileApp = function() {
 
-    this.prototype = funfneunCommon.MobileApp.prototype;
+    this.prototype = Five9Common.MobileApp.prototype;
 
     this.idleTimerCallbacks = $.Callbacks("stopOnFalse");
     return this;
 };
 
-funfneunCommon.MobileApp.prototype = {
+Five9Common.MobileApp.prototype = {
 
     start: function() {
-        funfneunCommon.debug("Starting mobile application");
+        Five9Common.debug("Starting mobile application");
         $(document).pagecontainer({ defaults: true });
     },
 
@@ -574,7 +575,7 @@ funfneunCommon.MobileApp.prototype = {
         if (startOrStop == 'start') {
 
             if (typeof app._idleTimer != 'undefined' || app._idleTimer != null) {
-                funfneunCommon.log("Warning: double idle timer start");
+                Five9Common.log("Warning: double idle timer start");
                 return;
             }
             app._idleTimer = window.setInterval(function(){
@@ -604,7 +605,7 @@ funfneunCommon.MobileApp.prototype = {
 
 };
 
-funfneunCommon.ie_init = function(){
+Five9Common.ie_init = function(){
     if (!Array.prototype.includes) {
       Array.prototype.includes = function(search, start) {
         'use strict';
@@ -621,4 +622,4 @@ funfneunCommon.ie_init = function(){
     }
 };
 
-funfneunCommon.ie_init();
+Five9Common.ie_init();
