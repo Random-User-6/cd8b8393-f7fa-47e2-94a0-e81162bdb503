@@ -90,3 +90,11 @@ section {
   font-size: 1.5em;
 }
 
+
+
+#accordion .ui-accordion-content {
+  overflow: visible !important;
+  height: auto !important;
+  max-height: none !important;
+  display: block;
+}
