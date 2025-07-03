@@ -10,11 +10,12 @@ function renderModulesList() {
   jsonData.forEach((entry, index) => {
     const li = document.createElement("li");
     li.textContent = entry.executorState?.moduleName || `Step ${index}`;
-    li.className = "module-entry";
+    li.className = "module-link";
+    if (index === selectedIndex) li.classList.add("selected");
     li.dataset.index = index;
     li.style.padding = "4px 8px";
     li.onclick = () => {
-      document.querySelectorAll(".state_list li").forEach(el => el.classList.remove("selected"));
+      document.querySelectorAll(".state_list .module-link").forEach(el => el.classList.remove("selected"));
       li.classList.add("selected");
       selectedIndex = index;
       renderStateContent(index);
