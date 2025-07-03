@@ -79,8 +79,8 @@ document.getElementById("renderBtn").addEventListener("click", () => {
   }
 });
 
-$(function () {
-  $("#accordion").accordion({
-    heightStyle: "content" // Let panels size based on their content
-  });
-});
+// $(function () {
+//   $("#accordion").accordion({
+//     heightStyle: "content" // Let panels size based on their content
+//   });
+// });
