@@ -14,7 +14,8 @@ $( function() {
 	});
 
     $( "#accordion" ).accordion({
-      collapsible: true
+      collapsible: true,
+      heightStyle: "content"
     });
 
     DebugUI.script_info_table = $('#script_info_table').DataTable({
