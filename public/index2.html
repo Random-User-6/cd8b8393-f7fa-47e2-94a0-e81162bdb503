@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>IVR Reloader</title>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="/libs/jquery-ui.min.css" />
+  <link rel="stylesheet" href="/libs/jquery.json-viewer.css" />
+  <link rel="stylesheet" href="/libs/debug.css" />
+  <script src="/libs/jquery-1.12.4.min.js"></script>
+  <script src="/libs/jquery-ui.min.js"></script>
+  <script src="/libs/jquery.json-viewer.js"></script>
+  <script src="/libs/debug.js"></script>
+  <script src="/libs/ui.js"></script>
+  <script src="/libs/common.js"></script>
+  <script src="/script.js" defer></script>
+</head>
+<body>
+<header class="header">
+  <h1>IVR Reloader</h1>
+  <div id="connect-container">
+    <a id="currentstatus"></a>
+  </div>
+</header>
+<br/>
+
+<section id="navigate_section" class="resizable ui-widget">
+  <article id="accordion">
+    <h3 class="header ui-widget-header">Script info</h3>
+    <div>
+      <table id="script_info_table" class="display compact">
+        <tbody>
+        <tr><td>Campaign</td><td id="campaign_cell"></td></tr>
+        <tr><td>Script name</td><td id="script_name_cell"></td></tr>
+        <tr><td>Media type</td><td id="media_type_cell"></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="header ui-widget-header">Initial parameters</h3>
+    <div>
+      <table id="init_params_table" class="display cell-border compact">
+        <thead><tr><th>Variable</th><th>Value</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <h3 class="header ui-widget-header">Paste JSON</h3>
+    <div>
+      <textarea id="jsonInput" rows="10" style="width:100%;"></textarea><br/>
+      <button id="renderBtn">Render JSON</button>
+    </div>
+
+    <h3 class="header ui-widget-header">Modules</h3>
+    <div>
+      <ul class="state_list ui-widget-content" id="modules_list"></ul>
+    </div>
+  </article>
+  <br/>
+  <input type="button" id="save_btn" value="Save to file"/>
+</section>
+
+<section id="tree_section" class="ui-widget">
+  <h3 class="ui-widget-header">State content:</h3>
+  <div>
+    <input type="checkbox" id="difference" checked />
+    <label for="difference">Show only different variables from prev state</label>
+  </div>
+  <article id="json-viewer" class="ui-widget-content" style="min-height: 400px;"></article>
+  <div><h3 id="error_message" class="error_container" style="color:red;"></h3></div>
+</section>
+
+<!-- <script src="script.js"></script> -->
+</body>
+</html>
