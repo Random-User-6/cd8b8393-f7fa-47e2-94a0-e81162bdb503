@@ -12,6 +12,7 @@ function renderModulesList() {
     li.textContent = entry.executorState?.moduleName || `Step ${index}`;
     li.className = "module-entry";
     li.dataset.index = index;
+    li.style.padding = "4px 8px";
     li.onclick = () => {
       document.querySelectorAll(".state_list li").forEach(el => el.classList.remove("selected"));
       li.classList.add("selected");
@@ -20,6 +21,13 @@ function renderModulesList() {
     };
     list.appendChild(li);
   });
+
+  // Expand the modules section if content is long
+  const container = document.querySelector("#modules_list");
+  if (container) {
+    const totalItems = jsonData.length;
+    container.style.maxHeight = totalItems > 15 ? "600px" : "auto";
+  }
 }
 
 function getDifferences(current, previous) {
